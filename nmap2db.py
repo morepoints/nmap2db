@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-
+import sys
+import argparse
 import sqlite3
 import xml.etree.ElementTree as ET
 
@@ -110,10 +111,22 @@ hop_host = ''
 output_type = ''
 
 ######################################
+## Help menu/ argsparse
+######################################
+try:
+  parser = argparse.ArgumentParser(description='Convert nmap XML data to sqlite3 database.')
+  parser.add_argument('file', type=open, help='file to be parsed by script')
+  args = parser.parse_args()
+
+######################################
 ## XML parse
 ######################################
+  tree = ET.parse(args.file)
 
-tree = ET.parse('test4.xml')
+except Exception as error:
+  print('Error: ' + str(error))
+  sys.exit(1)
+
 root = tree.getroot()
 nmaprun_scanner = root.get('scanner')
 nmaprun_args = root.get('args')
@@ -216,7 +229,7 @@ for host in root.findall('host'):
           extrareasons_reason = extrareasons.get('reason')
           extrareasons_count = extrareasons.get('count')
 
-      for hostname in hostnames.findall('hostname'): ## Block contains multiple entries
+      for hostname in hostnames.findall('hostname'):
         hostname_name = hostname.get('name')
         hostname_type = hostname.get('type')
 
@@ -248,7 +261,7 @@ for host in root.findall('host'):
 
 
 
-        for port in ports.findall('port'): ## Block contains multiple entries
+        for port in ports.findall('port'):
           port_protocol = port.get('protocol')
           port_portid = port.get('portid')
 
@@ -285,103 +298,102 @@ for host in root.findall('host'):
             script_id = script.get('id')
             script_output = script.get('output')
 
-            variables_array = [nmaprun_start,
-              nmaprun_startstr,
-              nmaprun_version,
-              nmaprun_profile_name,
-              nmaprun_xmloutputversion,
-              scaninfo_type,
-              scaninfo_scanflags,
-              scaninfo_protocol,
-              scaninfo_numservices,
-              scaninfo_services,
-              verbose_level,
-              debugging_level,
-              finished_time,
-              finished_timestr,
-              finished_elapsed,
-              finished_summary,
-              finished_exit,
-              finished_errormsg,
-              hosts_up,
-              hosts_down,
-              hosts_total,
-              host_starttime,
-              host_endtime,
-              host_comment,
-              status_state,
-              status_reason,
-              status_reason_ttl,
-              address_addr,
-              address_addrtype,
-              address_vendor,
-              times_srtt,
-              times_rttvar,
-              times_to,
-              smurf_responses,
-              extraports_state,
-              extraports_count,
-              extrareasons_reason,
-              extrareasons_count,
-              hostname_name,
-              hostname_type,
-              port_protocol,
-              port_portid,
-              state_state,
-              state_reason,
-              state_reason_ttl,
-              state_reason_ip,
-              owner_name,
-              service_name,
-              service_conf,
-              service_method,
-              service_version,
-              service_product,
-              service_extrainfo,
-              service_tunnel,
-              service_proto,
-              service_rpcnum,
-              service_lowver,
-              service_highver,
-              service_hostname,
-              service_ostype,
-              service_devicetype,
-              service_servicefp,
-              service_cpe_text,
-              script_id,
-              script_output,
-              portused_state,
-              portsused_proto,
-              portsused_portid,
-              osclass_vendor,
-              osclass_osgen,
-              osclass_type,
-              osclass_accuracy,
-              osclass_osfamily,
-              osclass_cpe_text,
-              osmatch_name,
-              osmatch_accuracy,
-              osmatch_line,
-              osfingerprint_fingerprint,
-              distance_value,
-              uptime_seconds,
-              uptime_lastboot,
-              tcpsequence_index,
-              tcpsequence_difficulty,
-              tcpsequence_values,
-              ipidsequence_class,
-              ipidsequence_values,
-              tcptssequence_class,
-              tcptssequence_values,
-              trace_proto,
-              trace_port,
-              hop_ttl,
-              hop_rtt,
-              hop_ipaddr,
-              hop_host,
-              output_type]
-            results_array.append(variables_array)
-print(results_array)
+          variables_array = [nmaprun_start,
+            nmaprun_startstr,
+            nmaprun_version,
+            nmaprun_profile_name,
+            nmaprun_xmloutputversion,
+            scaninfo_type,
+            scaninfo_scanflags,
+            scaninfo_protocol,
+            scaninfo_numservices,
+            scaninfo_services,
+            verbose_level,
+            debugging_level,
+            finished_time,
+            finished_timestr,
+            finished_elapsed,
+            finished_summary,
+            finished_exit,
+            finished_errormsg,
+            hosts_up,
+            hosts_down,
+            hosts_total,
+            host_starttime,
+            host_endtime,
+            host_comment,
+            status_state,
+            status_reason,
+            status_reason_ttl,
+            address_addr,
+            address_addrtype,
+            address_vendor,
+            times_srtt,
+            times_rttvar,
+            times_to,
+            smurf_responses,
+            extraports_state,
+            extraports_count,
+            extrareasons_reason,
+            extrareasons_count,
+            hostname_name,
+            hostname_type,
+            port_protocol,
+            port_portid,
+            state_state,
+            state_reason,
+            state_reason_ttl,
+            state_reason_ip,
+            owner_name,
+            service_name,
+            service_conf,
+            service_method,
+            service_version,
+            service_product,
+            service_extrainfo,
+            service_tunnel,
+            service_proto,
+            service_rpcnum,
+            service_lowver,
+            service_highver,
+            service_hostname,
+            service_ostype,
+            service_devicetype,
+            service_servicefp,
+            service_cpe_text,
+            script_id,
+            script_output,
+            portused_state,
+            portsused_proto,
+            portsused_portid,
+            osclass_vendor,
+            osclass_osgen,
+            osclass_type,
+            osclass_accuracy,
+            osclass_osfamily,
+            osclass_cpe_text,
+            osmatch_name,
+            osmatch_accuracy,
+            osmatch_line,
+            osfingerprint_fingerprint,
+            distance_value,
+            uptime_seconds,
+            uptime_lastboot,
+            tcpsequence_index,
+            tcpsequence_difficulty,
+            tcpsequence_values,
+            ipidsequence_class,
+            ipidsequence_values,
+            tcptssequence_class,
+            tcptssequence_values,
+            trace_proto,
+            trace_port,
+            hop_ttl,
+            hop_rtt,
+            hop_ipaddr,
+            hop_host,
+            output_type]
+          results_array.append(variables_array)
 
 ######################################
 ## SQLite stuff
@@ -494,5 +506,6 @@ try:
 
 except Exception as error:
   print('Error: ' + str(error))
+
 
 
